@@ -3,6 +3,8 @@ import { Label } from "ng2-charts";
 import { ChartDataSets } from "chart.js";
 import { NorthwindService } from "src/app/services/northwind.service";
 import { Observable } from "rxjs";
+import * as jwt_decode from "jwt-decode";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-bar",
@@ -10,7 +12,7 @@ import { Observable } from "rxjs";
   styleUrls: ["./bar.component.scss"],
 })
 export class BarComponent implements OnInit {
-  constructor(private service: NorthwindService) {}
+  constructor(private service: NorthwindService, private router: Router) {}
 
   dataDimension: Label[] = [];
   dataValues: ChartDataSets[] = [];
@@ -48,13 +50,19 @@ export class BarComponent implements OnInit {
   selectedDataValues = [];
 
   ngOnInit(): void {
-    this.selectedDimension = this.defaultBindingsList[0];
-    this.customer$ = this.service.getItemsByDimension(
-      `${this.selectedDimension.dimension}`,
-      "ASC"
-    );
-    this.year$ = this.service.getItemsByDimension(`${this.year}`, "ASC");
-    this.month$ = this.service.getItemsByDimension(`${this.month}`, "ASC");
+    const decodeUser = jwt_decode(localStorage.getItem("currentUser"));
+    if (decodeUser.rol === "BAR" || decodeUser.rol === "Admin") {
+      this.selectedDimension = this.defaultBindingsList[0];
+      this.customer$ = this.service.getItemsByDimension(
+        `${this.selectedDimension.dimension}`,
+        "ASC"
+      );
+      this.year$ = this.service.getItemsByDimension(`${this.year}`, "ASC");
+      this.month$ = this.service.getItemsByDimension(`${this.month}`, "ASC");
+    } else {
+      alert("No tienes permisos para ver gráfico de barras");
+      this.router.navigate(["/pie-chart"]);
+    }
   }
   onChangeDimension($event) {
     this.selectedDimension = $event;
