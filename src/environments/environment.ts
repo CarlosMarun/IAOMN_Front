@@ -7,6 +7,7 @@ export const environment = {
   API: {
     EndPoint: {
       Northwind: "http://localhost/Proyecto.Northwind/v1/Proyecto/Northwind/",
+      Auth: "http://localhost:3000/api/auth/",
     },
   },
 };

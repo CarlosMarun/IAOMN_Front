@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { Label } from "ng2-charts";
 import { Observable } from "rxjs/internal/Observable";
 import { NorthwindService } from "src/app/services/northwind.service";
+import * as jwt_decode from "jwt-decode";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-pie",
@@ -9,7 +11,7 @@ import { NorthwindService } from "src/app/services/northwind.service";
   styleUrls: ["./pie.component.scss"],
 })
 export class PieComponent implements OnInit {
-  constructor(private service: NorthwindService) {}
+  constructor(private service: NorthwindService, private router: Router) {}
   // Data Variables
   dataDimension: Label[] = [];
   dataValues: number[] = [];
@@ -43,13 +45,19 @@ export class PieComponent implements OnInit {
   selectedMonth: string[] = [];
 
   ngOnInit(): void {
-    this.selectedDimension = this.defaultBindingsList[0];
-    this.customer$ = this.service.getItemsByDimension(
-      `${this.selectedDimension.dimension}`,
-      "ASC"
-    );
-    this.year$ = this.service.getItemsByDimension(`${this.year}`, "ASC");
-    this.month$ = this.service.getItemsByDimension(`${this.month}`, "ASC");
+    const decodeUser = jwt_decode(localStorage.getItem("currentUser"));
+    if (decodeUser.rol === "PIE" || decodeUser.rol === "Admin") {
+      this.selectedDimension = this.defaultBindingsList[0];
+      this.customer$ = this.service.getItemsByDimension(
+        `${this.selectedDimension.dimension}`,
+        "ASC"
+      );
+      this.year$ = this.service.getItemsByDimension(`${this.year}`, "ASC");
+      this.month$ = this.service.getItemsByDimension(`${this.month}`, "ASC");
+    } else {
+      alert("No tienes permisos para ver gráfico de pie");
+      this.router.navigate(["/bar-chart"]);
+    }
   }
 
   onChangeDimension($event) {
