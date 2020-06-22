@@ -1,6 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnChanges } from "@angular/core";
 import { AuthenticationService } from "../../../services/auth/authentication.service";
 import { Router } from "@angular/router";
+import * as jwt_decode from "jwt-decode";
 
 @Component({
   selector: "app-navbar",
@@ -12,11 +13,13 @@ export class NavbarComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private router: Router
   ) {}
+  user = "";
 
   ngOnInit() {}
   getUser() {
     const currentUser = this.authenticationService.currentUserValue;
     if (currentUser) {
+      this.user = jwt_decode(currentUser).email;
       return true;
     } else {
       return false;

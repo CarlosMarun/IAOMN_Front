@@ -1,5 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Proyecto Dashboard 2P</a>
+  <a
+    class="navbar-brand"
+    [ngStyle]="{ display: getUser() ? 'block' : 'none' }"
+    >{{ user }}</a
+  >
   <button
     class="navbar-toggler"
     type="button"
