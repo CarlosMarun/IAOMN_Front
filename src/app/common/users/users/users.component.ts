@@ -18,7 +18,7 @@ export class UsersComponent implements OnInit {
   ) {}
   columnas: string[] = ["email", "fullName", "rol", "borrar"];
   datos = [];
-  @ViewChild("tabla", { static: true }) table: MatTable<any>;
+  @ViewChild("tabla", { static: false }) table: MatTable<any>;
 
   ngOnInit() {
     this.getAllUsers();
@@ -48,8 +48,9 @@ export class UsersComponent implements OnInit {
             .pipe()
             .subscribe(
               (data: any) => {
-                this.table.renderRows();
                 this.alertService.success(data.msg, false);
+                this.datos[0].splice(cod, 1);
+                this.table.renderRows();
               },
               (error) => {
                 this.alertService.error(error.error.msg);
