@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "~8.2.9",
     "@angular/router": "~8.2.9",
     "@ng-select/ng-select": "~3.7.3",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "chartjs-plugin-datalabels": "^0.7.0",
     "jwt-decode": "^2.2.0",
     "ng2-charts": "^2.3.0",
